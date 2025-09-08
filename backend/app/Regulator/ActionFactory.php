@@ -3,61 +3,38 @@ declare(strict_types=1);
 
 namespace App\Regulator;
 
-use App\Models\RegulatorCondition;
-use App\Regulator\Conditions\ConditionInterface;
-use App\Regulator\Conditions\Equal;
-use App\Regulator\Conditions\Greater;
-use App\Regulator\Conditions\GreaterEqual;
-use App\Regulator\Conditions\Less;
-use App\Regulator\Conditions\LessEqual;
-use App\Regulator\Conditions\NotEqual;
-use App\Regulator\Dto\ConditionDto;
-use App\Regulator\Dto\DataDto;
-use App\Regulator\Enum\RuleConditionOperatorEnum;
-use App\Regulator\Enum\RuleParametersEnum;
-use Illuminate\Support\Collection;
+use App\Models\Announcement;
+use App\Models\RegulatorAction;
+use App\Regulator\Actions\ActionInterface;
+use App\Regulator\Actions\DecrementAction;
+use App\Regulator\Actions\DecrementWithConstraintBudgetAction;
+use App\Regulator\Actions\IncrementAction;
+use App\Regulator\Dto\ActionDto;
+use App\Regulator\Enum\RuleActionEnum;
+use App\Regulator\Exceptions\RegulatorActionException;
+use App\Services\AnnouncementService;
 
 class ActionFactory
 {
-    public function createCondition(
-        string $operator
-    ): ConditionInterface {
-        return match ($operator) {
-            RuleConditionOperatorEnum::EQUAL->value => new Equal(),
-            RuleConditionOperatorEnum::LESS->value => new Less(),
-            RuleConditionOperatorEnum::GREATER->value => new Greater(),
-            RuleConditionOperatorEnum::NOT_EQUAL->value => new NotEqual(),
-            RuleConditionOperatorEnum::LESS_EQUAL->value => new LessEqual(),
-            RuleConditionOperatorEnum::GREATER_EQUAL->value => new GreaterEqual(),
-            default => throw new \Exception('Unknown operator')
+    public function __construct(readonly private AnnouncementService $announcementService)
+    {
+    }
+
+    public function createAction(
+        string $actionType,
+    ): ActionInterface {
+        return match ($actionType) {
+            RuleActionEnum::INCREMENT->value => new IncrementAction($this->announcementService),
+            RuleActionEnum::DECREMENT->value => new DecrementAction($this->announcementService),
+            RuleActionEnum::DECREMENT_WITH_CONSTRAINT_BUDGHET->value => new DecrementWithConstraintBudgetAction(
+                $this->announcementService
+            ),
+            default => throw new RegulatorActionException(sprintf('Unknown action %s.', $actionType))
         };
     }
 
-    public function createConditionDto(
-        string $operatorEnum,
-        int|float $parameterLeft,
-        int|float $parameterRight,
-    ): ConditionDto {
-        return new ConditionDto($operatorEnum, $parameterLeft, $parameterRight);
-    }
-
-    /**
-     * @param Collection| RegulatorCondition[] $condition
-     * @return Collection| ConditionDto[]
-     */
-    public function createConditionDtoCollection(
-        Collection $conditions,
-        DataDto $dataDto
-    ): Collection {
-        return $conditions->map(function (RegulatorCondition $model) use ($dataDto) {
-
-            $left = $dataDto->getParameterValue($model->getParameterLeft());
-
-            $right = $model->getParameterRight() === RuleParametersEnum::CUSTOM_VALUE->value ?
-                $model->getValue() :
-                $dataDto->getParameterValue($model->getParameterRight());
-
-            return $this->createConditionDto($model->getOperator(), $left, $right);
-        });
+    public function createActionDto(Announcement $announcement, RegulatorAction $action): ActionDto
+    {
+        return new ActionDto($announcement, $action->getType(), $action->getParameter(), $action->getValue());
     }
 }

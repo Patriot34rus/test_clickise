@@ -2,11 +2,19 @@
 
 <template>
   <div class="main-layout">
-    <header>...</header>
+    <header>
+      <BNav>
+        <BNavItem to="/" exact exact-active-class="active">Главная</BNavItem>
+        <BNavItem to="/rules" exact exact-active-class="active">Правила</BNavItem>
+        <BNavItem to="/stats" exact exact-active-class="active">График</BNavItem>
+        <BNavItem to="/logs" exact exact-active-class="active">Логи</BNavItem>
+      </BNav>
+      <hr />
+    </header>
     <main>
       <router-view />
     </main>
-    <footer>...</footer>
+    <footer></footer>
   </div>
 </template>
 

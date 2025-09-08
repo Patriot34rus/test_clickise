@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Exceptions;
 
-class BaseException extends \Exception
+class SystemBaseException extends \Exception
 {
 
 }

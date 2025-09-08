@@ -3,12 +3,11 @@ declare(strict_types=1);
 
 namespace App\Regulator\Actions;
 
-use App\Regulator\Dto\ActionDto;
+use App\Services\AnnouncementService;
 
-class AbstractAction implements ActionInterface
+abstract class AbstractAction implements ActionInterface
 {
-    public function execute(ActionDto $actionDto): bool
+    public function __construct(readonly protected AnnouncementService $service)
     {
-        // TODO: Implement execute() method.
     }
 }

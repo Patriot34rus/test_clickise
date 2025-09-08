@@ -3,9 +3,10 @@ declare(strict_types=1);
 
 namespace App\Regulator\Actions;
 
-use App\Regulator\Dto\ConditionDto;
+use App\Regulator\Dto\ActionDto;
 
-interface ActionInterface {
-    public function isMet(ConditionDto $condition): bool;
+interface ActionInterface
+{
+    public function execute(ActionDto $actionDto): bool;
 
 }

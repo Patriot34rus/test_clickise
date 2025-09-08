@@ -3,26 +3,17 @@ declare(strict_types=1);
 
 namespace App\Http\Formatter;
 
-use App\Models\RegulatorCondition;
-use Illuminate\Support\Collection;
+use App\Models\RegulatorAction;
 
 class ActionFormatter
 {
-    public function formatConditions(Collection $conditions): array
-    {
-        return $conditions->map(function ($condition) {
-            return $this->formatCondition($condition);
-        })->toArray();
-    }
-
-    public function formatCondition(RegulatorCondition $condition): array
+    public function formatAction(RegulatorAction $action): array
     {
         return [
-            'id' => $condition->getId(),
-            'operator' => $condition->getOperator(),
-            'parameterLeft' => $condition->getParameterLeft(),
-            'parameterRight' => $condition->getParameterRight(),
-            'value' => $condition->getValue(),
+            'id' => $action->getId(),
+            'parameter' => $action->getParameter(),
+            'type' => $action->getType(),
+            'value' => $action->getValue(),
         ];
     }
 }

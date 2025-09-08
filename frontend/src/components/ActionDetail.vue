@@ -1,21 +1,18 @@
 <script setup lang="ts">
-import type { Condition } from '@/types'
+import type { Action } from '@/types'
 
 interface Props {
-  conditions: Condition[]
+  action: Action
 }
 
 const props = defineProps<Props>()
 </script>
 
 <template>
-  <ul>
-    <li v-for="item in conditions" :key="item.id">
-      {{ item.parameterLeft }} {{ item.operator }} {{
-        item.parameterRight === 'value' ? item.value : item.parameterRight
-      }}
-    </li>
-  </ul>
+  <div>
+    {{ action.parameter }} {{ action.type == 'increment' ? 'увеличиваем на' : 'уменьшаем на' }}
+    {{ action.value }}
+  </div>
 </template>
 
 <style scoped></style>

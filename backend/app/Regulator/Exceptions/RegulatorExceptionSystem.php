@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace App\Regulator\Exceptions;
 
-use App\Exceptions\BaseException;
+use App\Exceptions\SystemBaseException;
 
-class RegulatorException extends BaseException
+class RegulatorExceptionSystem extends SystemBaseException
 {
 
 }

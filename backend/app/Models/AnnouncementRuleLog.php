@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class AnnouncementRuleLog extends Model
 {
@@ -14,7 +15,7 @@ class AnnouncementRuleLog extends Model
 
     public function getCpm(): float
     {
-        return $this->cpm;
+        return (float) $this->cpm;
     }
 
     public function setCpm(float $cpm): self
@@ -26,7 +27,7 @@ class AnnouncementRuleLog extends Model
 
     public function getBudget(): float
     {
-        return $this->budget;
+        return (float) $this->budget;
     }
 
     public function setBudget(float $budget): self
@@ -36,28 +37,35 @@ class AnnouncementRuleLog extends Model
         return $this;
     }
 
-    public function getStatus(): int
+    public function setDate(\DateTimeImmutable $date): self
     {
-        return $this->status;
-    }
-
-    public function setStatus(int $status): self
-    {
-        $this->status = $status;
+        $this->date = $date;
 
         return $this;
     }
 
-    public function getName(): string
+    public function getDateTime(): ?\DateTimeImmutable
     {
-        return $this->name;
+        return $this->date;
     }
 
-    public function setName(string $name): self
+    public function getAnnouncement(): Announcement
     {
-        $this->name = $name;
-
-        return $this;
+        return $this->announcement()->first();
     }
 
+    public function announcement(): BelongsTo
+    {
+        return $this->belongsTo(Announcement::class, 'announcement_id');
+    }
+
+    public function getRule(): RegulatorRule
+    {
+        return $this->rule()->first();
+    }
+
+    public function rule(): belongsTo
+    {
+        return $this->belongsTo(RegulatorRule::class, 'rule_id');
+    }
 }

@@ -4,11 +4,17 @@ declare(strict_types=1);
 namespace App\Regulator\Actions;
 
 use App\Regulator\Dto\ActionDto;
+use App\Regulator\Enum\RuleParametersEnum;
 
-class DecrementAction implements ActionInterface
+class DecrementAction extends AbstractAction
 {
     public function execute(ActionDto $actionDto): bool
     {
-        // TODO: Implement execute() method.
+        $announcement = $actionDto->getAnnouncement();
+
+        return match ($actionDto->getParameter()) {
+            RuleParametersEnum::BUDGET->value => $this->service->decrementBudget($announcement, $actionDto->getValue()),
+            RuleParametersEnum::CPM->value => $this->service->decrementCPM($announcement, $actionDto->getValue()),
+        };
     }
 }

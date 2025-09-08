@@ -3,9 +3,7 @@ declare(strict_types=1);
 
 namespace App\Repositories;
 
-use App\Models\RegulatorAction;
 use App\Models\RegulatorCondition;
-use App\Models\RegulatorRule;
 use App\Regulator\Enum\RuleConditionOperatorEnum;
 use App\Regulator\Enum\RuleParametersEnum;
 use Illuminate\Support\Collection;
@@ -13,12 +11,12 @@ use Illuminate\Support\Collection;
 class RegulatorConditionRepository
 {
     public function __construct(
-        readonly private RegulatorRule $model
+        readonly private RegulatorCondition $model
     ) {
     }
 
     /**
-     * @return Collection<RegulatorRule> | RegulatorRule[]
+     * @return Collection<RegulatorCondition> | RegulatorCondition[]
      */
     public function getAll(): Collection
     {
@@ -26,30 +24,16 @@ class RegulatorConditionRepository
     }
 
     /**
-     * @return Collection<RegulatorRule> | RegulatorRule[]
+     * @return Collection<RegulatorCondition> | RegulatorCondition[]
      */
-    public function getAllWithConditionsAndActions(): Collection
+    public function getAllWithRules(): Collection
     {
-        return $this->model->with([RegulatorCondition::class, RegulatorAction::class])->get();
+        return $this->model->with('rule')->get();
     }
 
-    public function save(RegulatorRule $rule): bool
-    {
-        return $rule->save();
-    }
-
-    public function saveCondition(RegulatorCondition $condition): bool
+    public function save(RegulatorCondition $condition): bool
     {
         return $condition->save();
-    }
-
-    public function createRule(string $name, RuleParametersEnum $pattern): ?RegulatorRule
-    {
-        $rule = (new RegulatorRule())
-            ->setName($name)
-            ->setPattern($pattern);
-
-        return $this->save($rule) ? $rule : null;
     }
 
     public function createCondition(
@@ -57,13 +41,13 @@ class RegulatorConditionRepository
         RuleParametersEnum $parameterRight,
         RuleParametersEnum $parameterLeft,
         ?float $value = null,
-    ): ?RegulatorCondition {
+    ): RegulatorCondition {
         $condition = (new RegulatorCondition())
             ->setParameterRight($parameterRight)
             ->setParameterLeft($parameterLeft)
             ->setOperator($operator)
             ->setValue($value);
 
-        return $this->saveCondition($condition) ? $condition : null;
+        return $condition;
     }
 }

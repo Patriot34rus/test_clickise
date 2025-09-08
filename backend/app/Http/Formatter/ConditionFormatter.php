@@ -3,25 +3,26 @@ declare(strict_types=1);
 
 namespace App\Http\Formatter;
 
-use App\Models\RegulatorRule;
+use App\Models\RegulatorCondition;
 use Illuminate\Support\Collection;
 
 class ConditionFormatter
 {
-    public function formatRules(Collection $rules): array
+    public function formatConditions(Collection $conditions): array
     {
-        return $rules->map(function ($rule) {
-            return $this->formatRule($rule);
+        return $conditions->map(function ($condition) {
+            return $this->formatCondition($condition);
         })->toArray();
     }
 
-    public function formatRule(RegulatorRule $rule): array
+    public function formatCondition(RegulatorCondition $condition): array
     {
         return [
-            'name' => $rule->getName(),
-            'pattern' => $rule->getPattern(),
-            'conditions' => $rule->getConditions(),
-            'action' => $rule->getAction(),
+            'id' => $condition->getId(),
+            'operator' => $condition->getOperator(),
+            'parameterLeft' => $condition->getParameterLeft(),
+            'parameterRight' => $condition->getParameterRight(),
+            'value' => $condition->getValue(),
         ];
     }
 }
