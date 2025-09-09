@@ -35,5 +35,3 @@ RUN php artisan view:cache
 
 EXPOSE 9000
 CMD ["php-fpm"]
-CMD ["php", "artisan", "migrate"]
-CMD ["php", "artisan", "db:seed"]
