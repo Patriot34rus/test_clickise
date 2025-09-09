@@ -23,6 +23,9 @@ class RuleFactory
     ) {
     }
 
+    /**
+     * @throws RegulatorExceptionSystem
+     */
     public function createRule(RegulatorRule $model, RuleDataDto $ruleDto): RuleInterface
     {
         $rule = match ($model->getPattern()) {

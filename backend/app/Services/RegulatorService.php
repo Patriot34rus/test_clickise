@@ -22,7 +22,7 @@ class RegulatorService
     }
 
     /**
-     * @throws \Throwable
+     * @throws \App\Regulator\Exceptions\RegulatorExceptionSystem
      */
     public function process(AnnouncementStat $statModel, RegulatorRule $ruleModel): void
     {

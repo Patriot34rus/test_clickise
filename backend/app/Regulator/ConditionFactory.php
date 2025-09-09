@@ -15,10 +15,14 @@ use App\Regulator\Dto\ConditionDto;
 use App\Regulator\Dto\DataDto;
 use App\Regulator\Enum\RuleConditionOperatorEnum;
 use App\Regulator\Enum\RuleParametersEnum;
+use App\Regulator\Exceptions\RegulatorActionException;
 use Illuminate\Support\Collection;
 
 class ConditionFactory
 {
+    /**
+     * @throws RegulatorActionException
+     */
     public function createCondition(
         string $operator
     ): ConditionInterface {
@@ -29,10 +33,13 @@ class ConditionFactory
             RuleConditionOperatorEnum::NOT_EQUAL->value => new NotEqual(),
             RuleConditionOperatorEnum::LESS_EQUAL->value => new LessEqual(),
             RuleConditionOperatorEnum::GREATER_EQUAL->value => new GreaterEqual(),
-            default => throw new \Exception('Unknown operator')
+            default => throw new RegulatorActionException('Unknown operator')
         };
     }
 
+    /**
+     * @return ConditionDto
+     */
     public function createConditionDto(
         string $operatorEnum,
         int|float $parameterLeft,
