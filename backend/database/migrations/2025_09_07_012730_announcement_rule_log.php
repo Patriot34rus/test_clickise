@@ -17,7 +17,7 @@ return new class extends Migration {
                 $table->decimal('budget', 10, 2)->default(0);
                 $table->decimal('cpm', 10, 2)->default(0);
                 $table->foreignId('rule_id')->constrained('regulator_rules');
-                $table->foreignId('announcement_id')->constrained('announcement');
+                $table->foreignId('announcement_id')->constrained('announcements');
                 $table->date('date');
                 $table->timestamps();
             });
