@@ -12,7 +12,7 @@ services:
       - db
     volumes:
       - ./backend:/var/www
-    command: sh -c "php artisan migrate --force && php-fpm"
+    command: sh -c "php artisan migrate --force && php artisan db:seed && php-fpm"
     networks:
       - clickise-network
 
