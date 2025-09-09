@@ -28,7 +28,20 @@ class ProcessAnnouncementStatRegulatorCommand extends Command
         $this->info('Starting processing announcement stat rules...');
 
         $stats = $this->announcementStatRepository->getAllActive();
+
+        if ($stats->isEmpty()) {
+            $this->info('Process was stopped. Stats is empty.');
+
+            return;
+        }
+
         $rules = $this->regulatorRuleRepository->getAllWithConditionsAndActions();
+
+        if ($rules->isEmpty()) {
+            $this->info('Process was stopped. Rules is empty.');
+
+            return;
+        }
 
         $progressBar = $this->output->createProgressBar($stats->count());
         $progressBar->start();
